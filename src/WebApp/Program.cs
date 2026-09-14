@@ -17,28 +17,53 @@ app.MapGet("/", async (AppDbContext db) =>
 {
     var users = await db.Users.ToListAsync();
 
+    var usersHtml = string.Join("", users.Select(user =>
+        $"<tr><td>{user.Id}</td><td>{user.Name}</td><td>{user.Surname}</td></tr>"));
+
     var html = $"""
         <!DOCTYPE html>
         <html lang="ru">
         <head>
             <meta charset="UTF-8">
-            <title>Backend Project</title>
+            <title>Конфигурация серверного приложения</title>
         </head>
+
         <body>
-            <h1>Тестовая страница</h1>
+            <h1>Конфигурация серверного приложения</h1>
 
-            <h2>Информация о системе</h2>
-
+            <h2>Программная платформа</h2>
+            <p><b>Язык программирования:</b> C#</p>
             <p><b>.NET:</b> {Environment.Version}</p>
-            <p><b>ОС:</b> {Environment.OSVersion}</p>
+            <p><b>ASP.NET Core:</b> {typeof(Microsoft.AspNetCore.Builder.WebApplication).Assembly.GetName().Version}</p>
+            <p><b>Среда выполнения:</b> {Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}</p>
+
+            <h2>Сервер и операционная система</h2>
+            <p><b>Веб-сервер:</b> Kestrel</p>
+            <p><b>Операционная система:</b> {Environment.OSVersion}</p>
+            <p><b>Архитектура:</b> {System.Runtime.InteropServices.RuntimeInformation.OSArchitecture}</p>
             <p><b>Имя компьютера:</b> {Environment.MachineName}</p>
 
-            <h2>Пользователи</h2>
+            <h2>База данных</h2>
+            <p><b>СУБД:</b> MySQL</p>
+            <p><b>База данных:</b> appDB</p>
+            <p><b>Таблица:</b> users</p>
 
-            <ul>
-                {string.Join("", users.Select(user =>
-                    $"<li>{user.Name} {user.Surname}</li>"))}
-            </ul>
+            <table border="1" cellpadding="8">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Имя</th>
+                        <th>Фамилия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {usersHtml}
+                </tbody>
+            </table>
+
+            <h2>Контейнеризация</h2>
+            <p><b>Средство:</b> Docker</p>
+            <p><b>Оркестрация контейнеров:</b> Docker Compose</p>
         </body>
         </html>
         """;
