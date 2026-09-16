@@ -1,5 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using WebApp.Data;
+using WebApp.Services.Drawer;
+using WebApp.Services.Sorter;
+using WebApp.Services.ServerInfo;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,8 +14,14 @@ builder.Services.AddDbContext<AppDbContext>(options =>
             builder.Configuration.GetConnectionString("DefaultConnection")
         )
     ));
+builder.Services.AddSingleton<DrawerService>();
+builder.Services.AddSingleton<SelectionSortService>();
+builder.Services.AddSingleton<ServerInfoService>();
 
 var app = builder.Build();
+DrawerEndpoint.Map(app);
+SortEndpoint.Map(app);
+ServerInfoEndpoint.Map(app);
 
 app.MapGet("/", async (AppDbContext db) =>
 {
@@ -26,6 +36,7 @@ app.MapGet("/", async (AppDbContext db) =>
         <head>
             <meta charset="UTF-8">
             <title>Конфигурация серверного приложения</title>
+            <link rel="stylesheet" href="/style.css">>
         </head>
 
         <body>
