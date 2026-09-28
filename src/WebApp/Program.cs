@@ -17,11 +17,13 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddSingleton<DrawerService>();
 builder.Services.AddSingleton<SelectionSortService>();
 builder.Services.AddSingleton<ServerInfoService>();
+builder.Services.AddControllers();
 
 var app = builder.Build();
 DrawerEndpoint.Map(app);
 SortEndpoint.Map(app);
 ServerInfoEndpoint.Map(app);
+app.MapControllers();
 
 app.MapGet("/", async (AppDbContext db) =>
 {
