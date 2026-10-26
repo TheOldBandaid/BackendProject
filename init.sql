@@ -20,6 +20,14 @@ CREATE TABLE IF NOT EXISTS orders (
     FOREIGN KEY (user_id) REFERENCES users(ID) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS products (
+    ID INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    description VARCHAR(500) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    PRIMARY KEY (ID)
+);
+
 INSERT INTO users (name, surname)
 SELECT * FROM (SELECT 'Alex', 'Rover') AS tmp
 WHERE NOT EXISTS (
@@ -57,3 +65,19 @@ WHERE NOT EXISTS (SELECT 1 FROM orders WHERE product_name = 'Pizza') LIMIT 1;
 INSERT INTO orders (user_id, product_name, price)
 SELECT * FROM (SELECT 2, 'Juice', 300.00) AS tmp
 WHERE NOT EXISTS (SELECT 1 FROM orders WHERE product_name = 'Juice') LIMIT 1;
+
+INSERT INTO products (name, description, price)
+SELECT 'Маргарита', 'Пицца с томатным соусом, моцареллой и базиликом.', 450.00
+WHERE NOT EXISTS (SELECT 1 FROM products WHERE name = 'Маргарита');
+
+INSERT INTO products (name, description, price)
+SELECT 'Пепперони', 'Пицца с томатным соусом, сыром и пепперони.', 590.00
+WHERE NOT EXISTS (SELECT 1 FROM products WHERE name = 'Пепперони');
+
+INSERT INTO products (name, description, price)
+SELECT 'Четыре сыра', 'Пицца с моцареллой, дорблю, пармезаном и гаудой.', 650.00
+WHERE NOT EXISTS (SELECT 1 FROM products WHERE name = 'Четыре сыра');
+
+INSERT INTO products (name, description, price)
+SELECT 'Сок', 'Освежающий напиток.', 150.00
+WHERE NOT EXISTS (SELECT 1 FROM products WHERE name = 'Сок');
